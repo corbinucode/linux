@@ -1,27 +1,63 @@
 #!/bin/bash
+#
+# Set daily directories for skype and firefox downloads
+# and adjusts the current links
 
-# get date
-DATE=$(date --date="today" +%Y%m%d)
+# current date
+readonly DATE=$(date --date="tomorrow" +%Y%m%d)
 
 # base directory
-DIR_PREFIX="/home/$(whoami)/Downloads"
+readonly DIR_PREFIX="/home/$(whoami)/Downloads"
 
-# setup firefox
-FF_DIR="$DIR_PREFIX/archive/firefox/$DATE"
-FF_LINK="$DIR_PREFIX/firefox"
-mkdir -p $FF_DIR
-if [ -e $FF_LINK ]
-then
-  unlink $FF_LINK
-fi
-ln -s $FF_DIR $FF_LINK
 
-# setup skype
-SKYPE_DIR="$DIR_PREFIX/archive/skype/$DATE"
-SYKPE_LINK="$DIR_PREFIX/skype"
-mkdir -p $SKYPE_DIR
-if [ -e $SYKPE_LINK ]
-then
-  unlink $SYKPE_LINK
-fi
-ln -s $SKYPE_DIR $SYKPE_LINK
+
+#####################################################
+# creates a new directory with today's date as name
+# Globals:
+#   DATE
+#   DIR_PREFIX
+# Arguments:
+#   name of subdirectory
+# Returns:
+#   None
+#####################################################
+handle_dir() {
+  # setup directories
+  directory="${DIR_PREFIX}/archive/$1/${DATE}"
+  link="${DIR_PREFIX}/$1"
+  
+  # echo $directory
+  # echo $link
+
+  # create directory
+  mkdir -p ${directory}
+  
+  # renew linl
+  if [[ -e ${link} ]]
+  then
+    unlink ${link}
+  fi
+  ln -s ${directory} ${link}
+}
+
+#####################################################
+# main function
+# Globals:
+#   None
+# Arguments:
+#   None
+# Returns:
+#   None
+#####################################################
+main() {
+
+  # echo $DATE
+  # echo $DIR_PREFIX
+
+  handle_dir "firefox"
+  handle_dir "skype"
+
+  exit 0
+}
+
+main "$@"
