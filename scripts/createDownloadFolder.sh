@@ -4,7 +4,7 @@
 # and adjusts the current links
 
 # current date
-readonly DATE=$(date --date="tomorrow" +%Y%m%d)
+readonly DATE=$(date --date="today" +%Y%m%d)
 
 # base directory
 readonly DIR_PREFIX="/home/$(whoami)/Downloads"
@@ -33,8 +33,9 @@ handle_dir() {
   mkdir -p ${directory}
   
   # renew linl
-  if [[ -e ${link} ]]
+  if [[ -h ${link} ]]
   then
+    # echo "${link} successfully unlinked"
     unlink ${link}
   fi
   ln -s ${directory} ${link}
